@@ -1,6 +1,6 @@
 datasource db {
-  provider = "postgresql" // Assuming you're using PostgreSQL with Supabase
-  url      = env("DATABASE_URL") // Set the DATABASE_URL in your environment variables
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
 }
 
 generator client {
@@ -17,30 +17,54 @@ model User {
 }
 
 model Organization {
-  id            Int              @id @default(autoincrement())
-  name          String
-  type          OrganizationType // This field now uses the enum
-  templateId    Int
-  template      Template         @relation(fields: [templateId], references: [id])
-  users         User[]
-  formResponses FormResponse[]
+  id              Int              @id @default(autoincrement())
+  name            String
+  type            OrganizationType
+  templateId      Int?
+  template        Template?        @relation(fields: [templateId], references: [id])
+  users           User[]
+  formResponses   FormResponse[]
 }
 
 model Template {
-  id                Int            @id @default(autoincrement())
-  questionOrder     String // JSON-encoded order of questions
-  labelOverrides    String // JSON-encoded label overrides
-  specificQuestions String // JSON-encoded array of specific questions
-  organizations     Organization[]
+  id          Int          @id @default(autoincrement())
+  formFields  FormField[]
+  organizations Organization[]
+}
+
+model FormField {
+  id          Int                @id @default(autoincrement())
+  fieldName   String
+  label       String
+  fieldType   FieldType
+  options     FormFieldOption[]
+  templateId  Int?
+  template    Template?          @relation(fields: [templateId], references: [id])
+}
+
+model FormFieldOption {
+  id          Int        @id @default(autoincrement())
+  formFieldId Int
+  optionValue String
+  formField   FormField  @relation(fields: [formFieldId], references: [id])
 }
 
 model FormResponse {
-  id             Int          @id @default(autoincrement())
-  userId         Int
-  user           User         @relation(fields: [userId], references: [id])
-  organizationId Int
-  organization   Organization @relation(fields: [organizationId], references: [id])
-  responses      String // JSON-encoded responses
+  id                    Int              @id @default(autoincrement())
+  userId                Int
+  user                  User             @relation(fields: [userId], references: [id])
+  organizationId        Int
+  organization          Organization     @relation(fields: [organizationId], references: [id])
+  responses             String           // JSON-encoded responses for existing responses field
+  customQuestions       CustomQuestion[]
+}
+
+model CustomQuestion {
+  id              Int           @id @default(autoincrement())
+  formResponseId  Int
+  question        String
+  answer          String?
+  formResponse    FormResponse  @relation(fields: [formResponseId], references: [id])
 }
 
 enum OrganizationType {
@@ -54,4 +78,12 @@ enum OrganizationType {
   DENTAL
   DENTAL_CUSTOM
   INSURANCE_CUSTOM
+}
+
+enum FieldType {
+  DROPDOWN
+  TEXT
+  DATE
+  SEARCHABLE_LIST
+  TEXT_AREA
 }
