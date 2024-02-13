@@ -1,0 +1,57 @@
+datasource db {
+  provider = "postgresql" // Assuming you're using PostgreSQL with Supabase
+  url      = env("DATABASE_URL") // Set the DATABASE_URL in your environment variables
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model User {
+  id             Int            @id @default(autoincrement())
+  email          String         @unique
+  password       String
+  organizationId Int
+  organization   Organization   @relation(fields: [organizationId], references: [id])
+  formResponses  FormResponse[]
+}
+
+model Organization {
+  id            Int              @id @default(autoincrement())
+  name          String
+  type          OrganizationType // This field now uses the enum
+  templateId    Int
+  template      Template         @relation(fields: [templateId], references: [id])
+  users         User[]
+  formResponses FormResponse[]
+}
+
+model Template {
+  id                Int            @id @default(autoincrement())
+  questionOrder     String // JSON-encoded order of questions
+  labelOverrides    String // JSON-encoded label overrides
+  specificQuestions String // JSON-encoded array of specific questions
+  organizations     Organization[]
+}
+
+model FormResponse {
+  id             Int          @id @default(autoincrement())
+  userId         Int
+  user           User         @relation(fields: [userId], references: [id])
+  organizationId Int
+  organization   Organization @relation(fields: [organizationId], references: [id])
+  responses      String // JSON-encoded responses
+}
+
+enum OrganizationType {
+  DEFAULT
+  FINANCE
+  FINANCE_CUSTOM
+  MEDICAL
+  MEDICAL_CUSTOM
+  EDUCATIONAL
+  GOVERNMENT
+  DENTAL
+  DENTAL_CUSTOM
+  INSURANCE_CUSTOM
+}
