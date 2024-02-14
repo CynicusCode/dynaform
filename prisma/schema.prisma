@@ -86,4 +86,6 @@ enum FieldType {
   DATE
   SEARCHABLE_LIST
   TEXT_AREA
+  CHECKBOX
+  NUMBER
 }
