@@ -4,7 +4,8 @@ datasource db {
 }
 
 generator client {
-  provider = "prisma-client-js"
+  provider   = "prisma-client-js"
+  middleware = "prisma/middleware.js"
 }
 
 model User {
@@ -60,6 +61,7 @@ model FormResponse {
   organization    Organization     @relation(fields: [organizationId], references: [id])
   responses       String // JSON-encoded responses for existing responses field
   customQuestions CustomQuestion[]
+  FormSubmission  FormSubmission?
 }
 
 model CustomQuestion {
@@ -71,13 +73,12 @@ model CustomQuestion {
 }
 
 model FormSubmission {
-  id             Int           @id @default(autoincrement())
-  formResponse   FormResponse  @relation(fields: [formResponseId], references: [id]) 
-  formResponseId Int           @unique 
-  confirmationNumber String    @unique  // Generated confirmation number 
-  submittedAt    DateTime      @default(now()) // Timestamp of submission
+  id                 Int          @id @default(autoincrement())
+  formResponse       FormResponse @relation(fields: [formResponseId], references: [id], onDelete: Cascade)
+  formResponseId     Int          @unique
+  confirmationNumber String       @unique
+  submittedAt        DateTime     @default(now())
 }
-
 
 enum OrganizationType {
   DEFAULT
