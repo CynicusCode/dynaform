@@ -9,8 +9,11 @@ const config: Config = {
 	],
 	theme: {
 		extend: {
+			colors: {
+				"background-grey": "#ECECEF", // Corrected color extension
+			},
 			fontFamily: {
-				sans: "var(--font-poppins), sans-serif", // Use the CSS variable for Poppins
+				sans: ["var(--font-poppins)", "sans-serif"], // Ensured Poppins is in an array and removed the CSS variable
 			},
 		},
 	},
