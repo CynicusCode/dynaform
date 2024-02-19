@@ -1,5 +1,7 @@
 import React from "react";
 import styles from "./SignIn.module.css";
+import { FloatingLabelInput } from "@/components/ui/FloatingLabelInput";
+import { FloatingLabelWithIcon } from "@/components/ui/FloatingLabelWithIcon";
 
 const SignIn: React.FC = () => {
 	return (
@@ -9,10 +11,26 @@ const SignIn: React.FC = () => {
 		>
 			{/* Red rectangle */}
 			<section
-				className="bg-white w-1/2 rounded-lg shadow-xl"
+				className="bg-white w-1/2 rounded-lg shadow-xl p-20"
 				style={{ height: "80vh", marginLeft: "20%", marginRight: "30%" }}
 			>
-				<p className="text-white text-center">Sign In Form</p>
+				<FloatingLabelInput
+					label="Your Name"
+					id="name" // This should match the 'id' prop of the input for accessibility.
+					name="name"
+					placeholder=" " // Placeholder must be present for the floating label effect.
+				/>
+				<FloatingLabelWithIcon
+					label="Email"
+					id="emailInput"
+					icon={
+						<img
+							src="/icons/icon_email.svg" // Assuming the SVG is located at public/icons/icon_email.svg
+							alt="Email Icon"
+							className="w-4 h-4"
+						/>
+					}
+				/>
 			</section>
 			{/* Dynamic Dashboard */}
 			<section
@@ -21,7 +39,7 @@ const SignIn: React.FC = () => {
 					height: "70vh",
 					width: "30%",
 					top: "15%",
-					right: "15%",
+					right: "5%",
 				}}
 			>
 				<p className="text-white text-center">Dynamic Dashboard</p>
