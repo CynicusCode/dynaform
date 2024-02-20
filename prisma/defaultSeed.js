@@ -5,8 +5,8 @@ const prisma = new PrismaClient();
 async function main() {
 	const organization = await prisma.organization.create({
 		data: {
-			name: "Bads Cargo Financial",
-			type: "FINANCE_CUSTOM",
+			name: "Vanilla Default Medical Center",
+			type: "MEDICAL",
 			template: {
 				create: {
 					formFields: {
@@ -24,24 +24,78 @@ async function main() {
 								},
 							},
 							{
-								fieldName: "providerAddress",
-								label: "Provider's Address",
-								fieldType: "TEXT_AREA",
+								fieldName: "appointmentDurationHours",
+								label: "Appointment Duration - Hours",
+								fieldType: "DROPDOWN",
 								options: {
-									create: [],
+									create: Array.from({ length: 13 }, (_, i) => ({
+										optionValue: `${i} hour${i === 1 ? "" : "s"}`,
+									})),
 								},
 							},
 							{
-								fieldName: "consumerName",
-								label: "Customer's Name",
-								fieldType: "TEXT",
+								fieldName: "appointmentDurationMinutes",
+								label: "Appointment Duration - Minutes",
+								fieldType: "DROPDOWN",
+								options: {
+									create: [
+										{ optionValue: "00 minutes" },
+										{ optionValue: "15 minutes" },
+										{ optionValue: "30 minutes" },
+										{ optionValue: "45 minutes" },
+									],
+								},
+							},
+							{
+								fieldName: "appointmentTimeAMPM",
+								label: "AM/PM",
+								fieldType: "DROPDOWN",
+								options: {
+									create: [{ optionValue: "AM" }, { optionValue: "PM" }],
+								},
+							},
+							{
+								fieldName: "language",
+								label: "Language",
+								fieldType: "SEARCHABLE_LIST",
+								options: {
+									create: [
+										{ optionValue: "English" },
+										{ optionValue: "Spanish" },
+										{ optionValue: "Chinese" },
+										{ optionValue: "Vietnamese" },
+										{ optionValue: "Tagalog" },
+										{ optionValue: "Arabic" },
+										{ optionValue: "French" },
+										{ optionValue: "Korean" },
+										{ optionValue: "Russian" },
+										{ optionValue: "German" },
+										{ optionValue: "Haitian Creole" },
+										{ optionValue: "Portuguese" },
+										{ optionValue: "Italian" },
+										{ optionValue: "Polish" },
+										{ optionValue: "Urdu" },
+										{ optionValue: "Japanese" },
+										{ optionValue: "Persian" },
+										{ optionValue: "Gujarati" },
+										{ optionValue: "Bengali" },
+										{ optionValue: "ASL" },
+										{ optionValue: "CDI" },
+										{ optionValue: "Tactile" },
+									],
+								},
+							},
+							{
+								fieldName: "appointmentDateTime",
+								label: "Appointment Date & Time",
+								fieldType: "DATE",
 								options: {
 									create: [],
 								},
 							},
 							{
 								fieldName: "appointmentLocation",
-								label: "Branch Address",
+								label: "Address of the Appointment",
 								fieldType: "TEXT",
 								options: {
 									create: [],
@@ -51,6 +105,14 @@ async function main() {
 								fieldName: "arrivalInstructions",
 								label: "Arrival Instructions",
 								fieldType: "TEXT_AREA",
+								options: {
+									create: [],
+								},
+							},
+							{
+								fieldName: "consumerName",
+								label: "Customer's Name",
+								fieldType: "TEXT",
 								options: {
 									create: [],
 								},
@@ -77,6 +139,14 @@ async function main() {
 								},
 							},
 							{
+								fieldName: "appointmentDescription",
+								label: "Description of the Appointment",
+								fieldType: "TEXT_AREA",
+								options: {
+									create: [],
+								},
+							},
+							{
 								fieldName: "interpreterGender",
 								label: "Interpreter Gender",
 								fieldType: "DROPDOWN",
@@ -97,49 +167,9 @@ async function main() {
 								},
 							},
 							{
-								fieldName: "branchNumber",
-								label: "Branch Number",
-								fieldType: "NUMBER",
-								options: {
-									create: [],
-								},
-							},
-							{
-								fieldName: "employeeId",
-								label: "Employee Id#",
-								fieldType: "TEXT",
-								options: {
-									create: [],
-								},
-							},
-							{
-								fieldName: "appointmentDescription",
-								label: "Description of the Appointment",
-								fieldType: "TEXT_AREA",
-								options: {
-									create: [],
-								},
-							},
-							{
 								fieldName: "amountOfInterpreters",
 								label: "Amount of Interpreters",
 								fieldType: "NUMBER",
-								options: {
-									create: [],
-								},
-							},
-							{
-								fieldName: "appointmentDateTime",
-								label: "Appointment Date & Time",
-								fieldType: "DATE",
-								options: {
-									create: [],
-								},
-							},
-							{
-								fieldName: "Link",
-								label: "Link",
-								fieldType: "TEXT",
 								options: {
 									create: [],
 								},

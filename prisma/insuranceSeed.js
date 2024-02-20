@@ -5,8 +5,8 @@ const prisma = new PrismaClient();
 async function main() {
 	const organization = await prisma.organization.create({
 		data: {
-			name: "Bads Cargo Financial",
-			type: "FINANCE_CUSTOM",
+			name: "Red Circle Red Sword of Florida Insurance",
+			type: "INSURANCE_CUSTOM",
 			template: {
 				create: {
 					formFields: {
@@ -23,6 +23,15 @@ async function main() {
 									],
 								},
 							},
+
+							{
+								fieldName: "memberName",
+								label: "Member Name",
+								fieldType: "TEXT",
+								options: {
+									create: [],
+								},
+							},
 							{
 								fieldName: "providerAddress",
 								label: "Provider's Address",
@@ -32,16 +41,16 @@ async function main() {
 								},
 							},
 							{
-								fieldName: "consumerName",
-								label: "Customer's Name",
-								fieldType: "TEXT",
+								fieldName: "appointmentDateTime",
+								label: "Appointment Date & Time",
+								fieldType: "DATE",
 								options: {
 									create: [],
 								},
 							},
 							{
 								fieldName: "appointmentLocation",
-								label: "Branch Address",
+								label: "Address of the Appointment",
 								fieldType: "TEXT",
 								options: {
 									create: [],
@@ -51,6 +60,14 @@ async function main() {
 								fieldName: "arrivalInstructions",
 								label: "Arrival Instructions",
 								fieldType: "TEXT_AREA",
+								options: {
+									create: [],
+								},
+							},
+							{
+								fieldName: "consumerName",
+								label: "Customer's Name",
+								fieldType: "TEXT",
 								options: {
 									create: [],
 								},
@@ -77,6 +94,14 @@ async function main() {
 								},
 							},
 							{
+								fieldName: "appointmentDescription",
+								label: "Description of the Appointment",
+								fieldType: "TEXT_AREA",
+								options: {
+									create: [],
+								},
+							},
+							{
 								fieldName: "interpreterGender",
 								label: "Interpreter Gender",
 								fieldType: "DROPDOWN",
@@ -97,30 +122,6 @@ async function main() {
 								},
 							},
 							{
-								fieldName: "branchNumber",
-								label: "Branch Number",
-								fieldType: "NUMBER",
-								options: {
-									create: [],
-								},
-							},
-							{
-								fieldName: "employeeId",
-								label: "Employee Id#",
-								fieldType: "TEXT",
-								options: {
-									create: [],
-								},
-							},
-							{
-								fieldName: "appointmentDescription",
-								label: "Description of the Appointment",
-								fieldType: "TEXT_AREA",
-								options: {
-									create: [],
-								},
-							},
-							{
 								fieldName: "amountOfInterpreters",
 								label: "Amount of Interpreters",
 								fieldType: "NUMBER",
@@ -129,16 +130,16 @@ async function main() {
 								},
 							},
 							{
-								fieldName: "appointmentDateTime",
-								label: "Appointment Date & Time",
-								fieldType: "DATE",
+								fieldName: "costCenterNumber",
+								label: "What is the cost center number?",
+								fieldType: "NUMBER",
 								options: {
 									create: [],
 								},
 							},
 							{
-								fieldName: "Link",
-								label: "Link",
+								fieldName: "memberID",
+								label: "What is the member ID?",
 								fieldType: "TEXT",
 								options: {
 									create: [],

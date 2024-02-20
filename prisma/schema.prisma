@@ -4,7 +4,8 @@ datasource db {
 }
 
 generator client {
-  provider = "prisma-client-js"
+  provider   = "prisma-client-js"
+  middleware = "prisma/middleware.js"
 }
 
 model User {
@@ -17,54 +18,66 @@ model User {
 }
 
 model Organization {
-  id              Int              @id @default(autoincrement())
-  name            String
-  type            OrganizationType
-  templateId      Int?
-  template        Template?        @relation(fields: [templateId], references: [id])
-  users           User[]
-  formResponses   FormResponse[]
+  id            Int              @id @default(autoincrement())
+  name          String
+  type          OrganizationType
+  template      Template?        @relation(fields: [templateId], references: [id])
+  templateId    Int?             @unique // Optional foreign key (might have base or custom type)
+  users         User[]
+  formResponses FormResponse[]
 }
 
 model Template {
-  id          Int          @id @default(autoincrement())
-  formFields  FormField[]
-  organizations Organization[]
+  id             Int           @id @default(autoincrement())
+  baseTemplate   Template?     @relation("BaseTemplateCustomTemplate", fields: [baseTemplateId], references: [id])
+  baseTemplateId Int?
+  childTemplates Template[]    @relation("BaseTemplateCustomTemplate")
+  formFields     FormField[]
+  Organization   Organization?
 }
 
 model FormField {
-  id          Int                @id @default(autoincrement())
-  fieldName   String
-  label       String
-  fieldType   FieldType
-  options     FormFieldOption[]
-  templateId  Int?
-  template    Template?          @relation(fields: [templateId], references: [id])
+  id         Int               @id @default(autoincrement())
+  fieldName  String
+  label      String
+  fieldType  FieldType
+  options    FormFieldOption[]
+  templateId Int?
+  template   Template?         @relation(fields: [templateId], references: [id])
 }
 
 model FormFieldOption {
-  id          Int        @id @default(autoincrement())
+  id          Int       @id @default(autoincrement())
   formFieldId Int
   optionValue String
-  formField   FormField  @relation(fields: [formFieldId], references: [id])
+  formField   FormField @relation(fields: [formFieldId], references: [id])
 }
 
 model FormResponse {
-  id                    Int              @id @default(autoincrement())
-  userId                Int
-  user                  User             @relation(fields: [userId], references: [id])
-  organizationId        Int
-  organization          Organization     @relation(fields: [organizationId], references: [id])
-  responses             String           // JSON-encoded responses for existing responses field
-  customQuestions       CustomQuestion[]
+  id              Int              @id @default(autoincrement())
+  userId          Int
+  user            User             @relation(fields: [userId], references: [id])
+  organizationId  Int
+  organization    Organization     @relation(fields: [organizationId], references: [id])
+  responses       String // JSON-encoded responses for existing responses field
+  customQuestions CustomQuestion[]
+  FormSubmission  FormSubmission?
 }
 
 model CustomQuestion {
-  id              Int           @id @default(autoincrement())
-  formResponseId  Int
-  question        String
-  answer          String?
-  formResponse    FormResponse  @relation(fields: [formResponseId], references: [id])
+  id             Int          @id @default(autoincrement())
+  formResponseId Int
+  question       String
+  answer         String?
+  formResponse   FormResponse @relation(fields: [formResponseId], references: [id])
+}
+
+model FormSubmission {
+  id                 Int          @id @default(autoincrement())
+  formResponse       FormResponse @relation(fields: [formResponseId], references: [id], onDelete: Cascade)
+  formResponseId     Int          @unique
+  confirmationNumber String       @unique
+  submittedAt        DateTime     @default(now())
 }
 
 enum OrganizationType {
