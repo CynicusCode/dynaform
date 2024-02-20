@@ -1,51 +1,111 @@
-import React from "react";
-import styles from "./SignIn.module.css";
-import { FloatingLabelInput } from "@/components/ui/FloatingLabelInput";
-import { FloatingLabelWithIcon } from "@/components/ui/FloatingLabelWithIcon";
+import { useState } from "react";
+import { useForm } from "react-hook-form";
+import { supabase } from "../lib/supabaseClient"; // Your Supabase configuration
+import { useRouter } from "next/router";
+import Link from "next/link";
+import { Input, Label, Button, ErrorMessage, FormContainer } from "./styles";
+// Import your styled components
 
-const SignIn: React.FC = () => {
+interface SignInFormData {
+	accountNumber: string;
+	email: string;
+	password: string;
+}
+
+const SignInForm: React.FC = () => {
+	const [isLoading, setIsLoading] = useState(false);
+	const [error, setError] = useState<string | null>(null);
+	const router = useRouter();
+
+	const {
+		register,
+		handleSubmit,
+		formState: { errors },
+	} = useForm<SignInFormData>();
+
+	const onSubmit = async (data: SignInFormData) => {
+		setIsLoading(true);
+		setError(null);
+
+		try {
+			const { error } = await supabase.auth.signIn({
+				email: data.email,
+				password: data.password,
+			});
+
+			if (error) throw error;
+
+			// Successful sign-in - redirect to dashboard or appropriate page
+			router.push("/dashboard");
+		} catch (error: any) {
+			setError(error.message);
+		} finally {
+			setIsLoading(false);
+		}
+	};
+
 	return (
-		<main
-			className="h-screen flex justify-center items-center bg-background-grey p-8 relative"
-			style={{ paddingTop: "10vh", paddingBottom: "10vh" }}
-		>
-			{/* Red rectangle */}
-			<section
-				className="bg-white w-1/2 rounded-lg shadow-xl p-20"
-				style={{ height: "80vh", marginLeft: "20%", marginRight: "30%" }}
-			>
-				<FloatingLabelInput
-					label="Your Name"
-					id="name" // This should match the 'id' prop of the input for accessibility.
-					name="name"
-					placeholder=" " // Placeholder must be present for the floating label effect.
-				/>
-				<FloatingLabelWithIcon
-					label="Email"
-					id="emailInput"
-					icon={
-						<img
-							src="/icons/icon_email.svg" // Assuming the SVG is located at public/icons/icon_email.svg
-							alt="Email Icon"
-							className="w-4 h-4"
-						/>
-					}
-				/>
-			</section>
-			{/* Dynamic Dashboard */}
-			<section
-				className="bg-blue-950 absolute rounded-lg shadow-xl"
-				style={{
-					height: "70vh",
-					width: "30%",
-					top: "15%",
-					right: "5%",
-				}}
-			>
-				<p className="text-white text-center">Dynamic Dashboard</p>
-			</section>
-		</main>
+		<FormContainer>
+			<h2>Sign In</h2>
+
+			<form onSubmit={handleSubmit(onSubmit)}>
+				<div>
+					{" "}
+					{/* Account Number */}
+					<Label htmlFor="accountNumber">Account Number</Label>
+					<Input
+						id="accountNumber"
+						type="text"
+						{...register("accountNumber", { required: true })}
+					/>
+					{errors.accountNumber && (
+						<ErrorMessage>Account number is required</ErrorMessage>
+					)}
+				</div>
+
+				<div>
+					{" "}
+					{/* Email */}
+					<Label htmlFor="email">Email</Label>
+					<Input
+						id="email"
+						type="email"
+						{...register("email", { required: true, pattern: /^\S+@\S+$/i })}
+					/>
+					{errors.email && (
+						<ErrorMessage>Please enter a valid email address</ErrorMessage>
+					)}
+				</div>
+
+				<div>
+					{" "}
+					{/* Password */}
+					<Label htmlFor="password">Password</Label>
+					<Input
+						id="password"
+						type="password"
+						{...register("password", { required: true, minLength: 8 })}
+					/>
+					{errors.password && (
+						<ErrorMessage>Password must be at least 8 characters</ErrorMessage>
+					)}
+				</div>
+
+				{error && <ErrorMessage>{error}</ErrorMessage>}
+
+				<Button type="submit" disabled={isLoading}>
+					{isLoading ? "Signing in..." : "Sign In"}
+				</Button>
+
+				<p>
+					Don't have an account?{" "}
+					<Link href="/signup">
+						<a>Sign Up</a>
+					</Link>
+				</p>
+			</form>
+		</FormContainer>
 	);
 };
 
-export default SignIn;
+export default SignInForm;

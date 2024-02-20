@@ -16,6 +16,7 @@
     "@supabase/supabase-js": "^2.39.3",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.0",
+    "dotenv": "^16.4.5",
     "nanoid": "^5.0.5",
     "next": "14.1.0",
     "react": "^18",
