@@ -1,3 +1,4 @@
+//FloatingLabelInput.tsx
 import * as React from "react";
 import { Input, InputProps } from "./Input"; // Adjust the import path to where your Input component is located
 

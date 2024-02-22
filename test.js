@@ -1,17 +1,38 @@
-const { supabase } = require("./lib/supabaseClient");
+const { PrismaClient } = require("@prisma/client");
+const prisma = new PrismaClient();
 
-async function test() {
-	const { data, error } = await supabase
-		.from("users") // Adjust based on your table name
-		.select("*") // Selects all columns; consider limiting fields for large tables
-		.limit(1); // Limits the result to 1 entry for testing purposes
+async function fetchOrganizationDetails() {
+	try {
+		const organization = await prisma.organization.findFirst({
+			where: {
+				name: "Default Medical Center",
+			},
+			include: {
+				template: {
+					include: {
+						formFields: {
+							include: {
+								options: true, // Include options for each form field
+							},
+						},
+					},
+				},
+			},
+		});
 
-	if (error) {
-		console.error("Error testing Supabase connection:", error);
-		return;
+		if (organization) {
+			console.log(
+				"Organization Details:",
+				JSON.stringify(organization, null, 2),
+			);
+		} else {
+			console.log("Organization not found.");
+		}
+	} catch (error) {
+		console.error("Error fetching organization details:", error);
+	} finally {
+		await prisma.$disconnect();
 	}
-
-	console.log("Success! Data retrieved from Supabase:", data);
 }
 
-test();
+fetchOrganizationDetails();
