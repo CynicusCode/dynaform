@@ -1,111 +1,38 @@
-import { useState } from "react";
-import { useForm } from "react-hook-form";
-import { supabase } from "../lib/supabaseClient"; // Your Supabase configuration
-import { useRouter } from "next/router";
-import Link from "next/link";
-import { Input, Label, Button, ErrorMessage, FormContainer } from "./styles";
-// Import your styled components
+import React from "react";
+import styles from "./SignIn.module.css";
+import { FloatingLabelInput } from "@/components/ui/FloatingLabelInput";
+import { FloatingLabelWithIcon } from "@/components/ui/FloatingLabelWithIcon";
 
-interface SignInFormData {
-	accountNumber: string;
-	email: string;
-	password: string;
-}
-
-const SignInForm: React.FC = () => {
-	const [isLoading, setIsLoading] = useState(false);
-	const [error, setError] = useState<string | null>(null);
-	const router = useRouter();
-
-	const {
-		register,
-		handleSubmit,
-		formState: { errors },
-	} = useForm<SignInFormData>();
-
-	const onSubmit = async (data: SignInFormData) => {
-		setIsLoading(true);
-		setError(null);
-
-		try {
-			const { error } = await supabase.auth.signIn({
-				email: data.email,
-				password: data.password,
-			});
-
-			if (error) throw error;
-
-			// Successful sign-in - redirect to dashboard or appropriate page
-			router.push("/dashboard");
-		} catch (error: any) {
-			setError(error.message);
-		} finally {
-			setIsLoading(false);
-		}
-	};
-
+const SignIn: React.FC = () => {
 	return (
-		<FormContainer>
-			<h2>Sign In</h2>
-
-			<form onSubmit={handleSubmit(onSubmit)}>
-				<div>
-					{" "}
-					{/* Account Number */}
-					<Label htmlFor="accountNumber">Account Number</Label>
-					<Input
-						id="accountNumber"
-						type="text"
-						{...register("accountNumber", { required: true })}
-					/>
-					{errors.accountNumber && (
-						<ErrorMessage>Account number is required</ErrorMessage>
-					)}
-				</div>
-
-				<div>
-					{" "}
-					{/* Email */}
-					<Label htmlFor="email">Email</Label>
-					<Input
-						id="email"
-						type="email"
-						{...register("email", { required: true, pattern: /^\S+@\S+$/i })}
-					/>
-					{errors.email && (
-						<ErrorMessage>Please enter a valid email address</ErrorMessage>
-					)}
-				</div>
-
-				<div>
-					{" "}
-					{/* Password */}
-					<Label htmlFor="password">Password</Label>
-					<Input
-						id="password"
-						type="password"
-						{...register("password", { required: true, minLength: 8 })}
-					/>
-					{errors.password && (
-						<ErrorMessage>Password must be at least 8 characters</ErrorMessage>
-					)}
-				</div>
-
-				{error && <ErrorMessage>{error}</ErrorMessage>}
-
-				<Button type="submit" disabled={isLoading}>
-					{isLoading ? "Signing in..." : "Sign In"}
-				</Button>
-
-				<p>
-					Don't have an account?{" "}
-					<Link href="/signup">
-						<a>Sign Up</a>
-					</Link>
-				</p>
-			</form>
-		</FormContainer>
+		<main className="m-0 flex h-screen items-center justify-center bg-slate-400 relative">
+			{/* Background layer */}
+			<div className="absolute top-0 w-[54%] max-w-7xl h-full bg-slate-200 z-0"></div>
+			{/* Ensure the white box is in front of the background layer */}
+			<section className="h-4/5 bg-white shadow-xl w-[44%] max-w-xl m-0 z-10 relative ml-14">
+				<FloatingLabelWithIcon
+					label="Email"
+					id="emailInput"
+					icon={
+						<img
+							src="/icons/icon_email.svg" // Assuming the SVG is located at public/icons/icon_email.svg
+							alt="Email Icon"
+							className="w-4 h-4"
+						/>
+					}
+				/>
+			</section>
+			{/* Ensure the blue box also remains in front of the background layer */}
+			<section className="hidden sm:flex h-[73%] -translate-x-14 bg-blue-900 shadow-sm w-[30%] max-w-sm m-0 z-10 relative justify-center items-center">
+				<FloatingLabelInput
+					label="Your Name"
+					id="name"
+					name="name"
+					placeholder=" "
+				/>
+			</section>
+		</main>
 	);
 };
 
-export default SignInForm;
+export default SignIn;
