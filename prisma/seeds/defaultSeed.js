@@ -5,8 +5,9 @@ const prisma = new PrismaClient();
 async function main() {
 	const organization = await prisma.organization.create({
 		data: {
-			name: "Vanilla Default Medical Center",
+			name: "Default Medical Center",
 			type: "MEDICAL",
+			clientId: "123456"
 			template: {
 				create: {
 					formFields: {
