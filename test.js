@@ -1,38 +1,123 @@
-import React from "react";
-import { FloatingLabelWithIcon } from "@/components/ui/FloatingLabelWithIcon";
+"use client";
+import React, { useState } from "react";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { z } from "zod";
+import { supabase } from "../lib/supabaseClient"; // Ensure this is correctly set up
+import { FloatingLabelWithIcon } from "./ui/FloatingLabelWithIcon";
+import clientIcon from "../public/icons/icon_organization.svg";
 
-const TestPage = () => {
+// Define the schema
+const signInSchema = z.object({
+	clientId: z.string().min(1, "Client ID is required"),
+	email: z.string().email("Invalid email format"),
+	password: z.string().min(8, "Password must be at least 8 characters long"),
+});
+
+const SignInForm = () => {
+	// State setup
+	const [isLoading, setIsLoading] = useState(false);
+	const [formSuccess, setFormSuccess] = useState(false);
+	const [errorMessage, setErrorMessage] = useState("");
+
+	// Form handling
+	const {
+		register,
+		handleSubmit,
+		formState: { errors },
+		reset,
+	} = useForm({
+		resolver: zodResolver(signInSchema),
+	});
+
+	// Adjusted onSubmit function with verification logic
+	const onSubmit = async (data) => {
+		setIsLoading(true);
+
+		try {
+			// Sign in with Supabase
+			const { error } = await supabase.auth.signInWithPassword({
+				email: data.email,
+				password: data.password,
+			});
+
+			if (error) throw error;
+
+			setFormSuccess(true);
+			reset(); // Reset form on success
+
+			// Retrieve user data after successful sign-in
+			const user = await supabase
+				.from("User")
+				.select("organizationId")
+				.single();
+
+			// Check if user object and organization ID exist
+			if (!user || !user.data.organizationId) {
+				throw new Error("User not found or missing organization ID");
+			}
+
+			// Verify client ID against organization ID
+			if (data.clientId !== user.data.organizationId.toString()) {
+				throw new Error("Invalid Client ID");
+			}
+
+			// **Step 5. Redirect to webform URL (replace with your logic)**
+			// Replace this with the logic to generate or redirect to the specific webform URL based on the organization ID.
+		} catch (error) {
+			setErrorMessage(error.error_description || error.message);
+		} finally {
+			setIsLoading(false);
+		}
+	};
+
 	return (
-		<main className="m-0 flex h-screen items-center justify-center bg-stone-100 relative">
-			<section
-				className="min-h-[85%] md:min-h-[80%] w-[90%] md:w-[60%] lg:max-w-xl bg-white shadow-xl m-0 z-10 relative flex flex-col items-center justify-start pt-20 md:pt-10 md:ml-10 overflow-y-auto rounded-b-lg"
-				style={{ direction: "rtl" }}
-			>
-				<div
-					className="flex flex-col items-center w-full"
-					style={{ direction: "ltr" }}
-				>
-					{/* Adjusted for demonstration: fewer FloatingLabelWithIcon components */}
-					{[...Array(2)].map((_, index) => (
-						<FloatingLabelWithIcon
-							key={index}
-							label={`Email ${index + 1}`}
-							id={`emailInput${index}`}
-							icon={
-								<img
-									src="/icons/icon_email.svg"
-									alt="Email Icon"
-									className="w-5 h-5"
-								/>
-							}
-						/>
-					))}
-				</div>
-			</section>
+		<form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+			{/* Inputs */}
+			<FloatingLabelWithIcon
+				label="Client ID"
+				id="clientId"
+				type="text"
+				icon={clientIcon} // Pass the imported clientIcon
+				{...register("clientId")}
+			/>
 
-			<section className="hidden sm:flex md:w-[35%] md:max-w-md lg:max-w-lg h-[73%] md:-translate-x-10 bg-blue-900 shadow-sm m-0 z-10 relative justify-center items-center rounded-lg"></section>
-		</main>
+			{errors.clientId && (
+				<p className="text-red-500">{errors.clientId.message}</p>
+			)}
+
+			<FloatingLabelWithIcon
+				label="Username (Email)"
+				id="email"
+				type="email"
+				icon={clientIcon}
+				{...register("email")}
+			/>
+			{errors.email && <p className="text-red-500">{errors.email.message}</p>}
+
+			<FloatingLabelWithIcon
+				label="Password"
+				id="password"
+				type="password"
+				icon={clientIcon}
+				{...register("password")}
+			/>
+			{errors.password && (
+				<p className="text-red-500">{errors.password.message}</p>
+			)}
+
+			<button
+				type="submit"
+				disabled={isLoading}
+				className="px-4 py-2 text-white bg-blue-500 hover:bg-blue-600 rounded disabled:bg-blue-300"
+			>
+				{isLoading ? "Submitting..." : "Submit"}
+			</button>
+
+			{formSuccess && <p className="text-green-500">Signed in successfully!</p>}
+			{errorMessage && <p className="text-red-500">Error: {errorMessage}</p>}
+		</form>
 	);
 };
 
-export default TestPage;
+export default SignInForm;
