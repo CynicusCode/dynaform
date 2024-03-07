@@ -4,7 +4,7 @@ import { Input, InputProps } from "./Input"; // Adjust the import path as needed
 
 export interface FloatingLabelWithIconProps extends InputProps {
 	label: string;
-	id: string; //
+	id: string;
 	icon: React.ReactNode; // Icon is expected for this component
 }
 
@@ -12,25 +12,15 @@ const FloatingLabelWithIcon = React.forwardRef<
 	HTMLInputElement,
 	FloatingLabelWithIconProps
 >(({ label, id, className, icon, ...props }, ref) => {
-	const [isFocused, setIsFocused] = React.useState(false);
-
 	return (
 		<div className="relative z-0 mb-6 flex items-center">
-			<div
-				className={`absolute ml-2 transition-opacity duration-300 ${
-					isFocused ? "opacity-0" : "opacity-70"
-				}`}
-			>
-				{icon}
-			</div>
+			<div className="absolute ml-2 opacity-70">{icon}</div>
 			<Input
 				ref={ref}
 				id={id}
 				type="text"
-				className={`pl-8 pr-2.5 pb-2.5 pt-8 w-full text-sm text-gray-900 bg-transparent rounded-lg border border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer ${className}`}
+				className={`pl-10 pr-6 pt-6 pb-6 w-full text-sm text-gray-900 bg-transparent rounded-lg border border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer ${className}`}
 				placeholder=" "
-				onFocus={() => setIsFocused(true)}
-				onBlur={() => setIsFocused(false)}
 				{...props}
 			/>
 			<label

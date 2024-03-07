@@ -1,8 +1,8 @@
 import React from "react";
-import { FloatingLabelWithIcon } from "@/components/ui/FloatingLabelWithIcon";
 import Image from "next/image";
+import SignInForm from "@/components/SignInform";
 
-const SignIn: React.FC = () => {
+const SignInPage: React.FC = () => {
 	return (
 		<main className="bg-white relative flex justify-center items-center h-screen m-0">
 			<div className="relative max-w-screen-2xl w-full h-full flex justify-center items-center bg-stone-50">
@@ -18,12 +18,12 @@ const SignIn: React.FC = () => {
 					/>
 				</div>
 				{/* Responsive margin applied to the section */}
-				<section className="h-[90%] w-[95%] bg-white shadow-2xl m-0 relative flex flex-col items-center justify-center pt-20 md:m-6 rounded-xl max-w-xl ">
-					Content goes here
+				<section className="h-[90%] w-[95%] bg-white shadow-2xl m-0 relative flex flex-col items-center justify-center pt-20 md:m-6 rounded-xl max-w-3xl ">
+					<SignInForm />
 				</section>
 
 				{/* Adjusted positioning for the blue section */}
-				<section className="hidden sm:flex h-[85%] md:-translate-x-14 bg-blue-900 w-[35%] -m-6 z-10 relative justify-center items-center rounded-xl max-w-md shadow-xl">
+				<section className="hidden sm:flex h-[85%] md:-translate-x-14 bg-blue-900 w-[35%] -m-6 z-10 relative justify-center items-center rounded-xl max-w-lg shadow-xl">
 					More content goes here
 				</section>
 			</div>
@@ -31,4 +31,4 @@ const SignIn: React.FC = () => {
 	);
 };
 
-export default SignIn;
+export default SignInPage;
