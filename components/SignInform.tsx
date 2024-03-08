@@ -120,7 +120,7 @@ const SignInForm = () => {
 			<button
 				type="submit"
 				disabled={isLoading}
-				className="px-4 py-2 text-white bg-blue-500 hover:bg-blue-600 rounded disabled:bg-blue-300"
+				className="px-4 py-2 text-white bg-blue-500 hover:bg-blue-600 rounded disabled:bg-blue-300 justify-center items-center"
 			>
 				{isLoading ? "Submitting..." : "Submit"}
 			</button>
