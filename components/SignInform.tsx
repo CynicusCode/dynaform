@@ -3,19 +3,21 @@ import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-import { supabase } from "../lib/supabaseClient"; // Ensure this is correctly set up
+import { supabase } from "../lib/supabaseClient";
 import { FloatingLabelWithIcon } from "./ui/FloatingLabelWithIcon";
 import emailIcon from "../public/icons/icon_email.svg";
 import passwordIcon from "../public/icons/icon_password.svg";
 import clientIcon from "../public/icons/icon_organization.svg";
 
-import Image from "next/image";
+import Image from "next/legacy/image";
+import { Button } from "./ui/button";
+import { Separator } from "@/components/ui/separator";
 
 // Define the schema
 const signInSchema = z.object({
 	clientId: z.string().min(1, "Client ID is required"),
 	email: z.string().email("Invalid email format"),
-	password: z.string().min(8, "Password must be at least 8 characters long"),
+	password: z.string().min(6, "Password must be at least 6 characters long"),
 });
 
 const SignInForm = () => {
@@ -76,7 +78,7 @@ const SignInForm = () => {
 	};
 
 	return (
-		<form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+		<form onSubmit={handleSubmit(onSubmit)} className="space-y-8">
 			<FloatingLabelWithIcon
 				label="Client ID"
 				id="clientId"
@@ -117,13 +119,23 @@ const SignInForm = () => {
 				<p className="text-red-500">{errors.password.message}</p>
 			)}
 
-			<button
-				type="submit"
-				disabled={isLoading}
-				className="px-4 py-2 text-white bg-blue-500 hover:bg-blue-600 rounded disabled:bg-blue-300 justify-center items-center"
-			>
-				{isLoading ? "Submitting..." : "Submit"}
-			</button>
+			<div className="space-y-6">
+				<Button
+					className="w-full px-4 py-6 text-white font-bold bg-blue-900 hover:bg-blue-950 rounded disabled:bg-blue-300 justify-center items-center"
+					disabled={isLoading}
+				>
+					{isLoading ? "Signing in..." : "Sign-in"}
+				</Button>
+				<Separator className="mx-1 h-1 bg-gray-100" />
+				<Button
+					className="w-full px-4 py-6 text-white font-bold bg-orange-500 hover:bg-orange-600 rounded justify-center items-center"
+					onClick={() => {
+						/* Placeholder for future functionality */
+					}}
+				>
+					Create an Account
+				</Button>
+			</div>
 
 			{formSuccess && <p className="text-green-500">Signed in successfully!</p>}
 			{errorMessage && <p className="text-red-500">Error: {errorMessage}</p>}
