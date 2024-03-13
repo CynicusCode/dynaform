@@ -12,6 +12,7 @@ import clientIcon from "../public/icons/icon_organization.svg";
 import Image from "next/legacy/image";
 import { Button } from "./ui/button";
 import { Separator } from "@/components/ui/separator";
+import Link from "next/link";
 
 // Define the schema
 const signInSchema = z.object({
@@ -127,14 +128,16 @@ const SignInForm = () => {
 					{isLoading ? "Signing in..." : "Sign-in"}
 				</Button>
 				<Separator className="mx-1 h-1 bg-gray-100" />
-				<Button
-					className="w-full px-4 py-6 text-white font-bold bg-orange-500 hover:bg-orange-600 rounded justify-center items-center"
-					onClick={() => {
-						/* Placeholder for future functionality */
-					}}
-				>
-					Create an Account
-				</Button>
+				<Link href="/sign-up">
+					<Button
+						className="w-full px-4 py-6 text-white font-bold bg-orange-500 hover:bg-orange-600 rounded justify-center items-center"
+						onClick={() => {
+							/* Placeholder for future functionality */
+						}}
+					>
+						Create an Account
+					</Button>
+				</Link>
 			</div>
 
 			{formSuccess && <p className="text-green-500">Signed in successfully!</p>}

@@ -1,6 +1,7 @@
 import React from "react";
 import Image from "next/legacy/image";
 import SignInForm from "@/components/SignInform";
+import SignInNotice from "@/components/SignInNotice";
 
 const SignInPage: React.FC = () => {
 	return (
@@ -27,7 +28,7 @@ const SignInPage: React.FC = () => {
 
 				{/* Adjusted positioning for the blue section */}
 				<section className="hidden sm:flex h-[65%] md:-translate-x-14 bg-blue-900 w-[35%] -m-6 z-10 relative justify-center items-center rounded-xl max-w-lg shadow-xl">
-					More content goes here, take 2.
+					<SignInNotice />
 				</section>
 			</div>
 		</main>
