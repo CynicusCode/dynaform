@@ -19,9 +19,9 @@ async function seedUser() {
 
 		const user = await prisma.user.create({
 			data: {
-				email: "user1@defaultmedical.com",
+				email: "eve@defaultmedical.com",
 				// In a real app, hash the password using a library like bcrypt and store the hash
-				password: "123456", // This is just for demonstration; do not store plain passwords.
+				password: "Password", // This is just for demonstration; do not store plain passwords.
 				organizationId: organization.id,
 			},
 		});

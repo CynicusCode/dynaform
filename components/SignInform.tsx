@@ -1,3 +1,4 @@
+//SignInForm.tsx
 "use client";
 import React, { useState } from "react";
 import { useForm } from "react-hook-form";
@@ -12,6 +13,7 @@ import clientIcon from "../public/icons/icon_organization.svg";
 import Image from "next/legacy/image";
 import { Button } from "./ui/button";
 import { Separator } from "@/components/ui/separator";
+import Link from "next/link";
 
 // Define the schema
 const signInSchema = z.object({
@@ -68,7 +70,7 @@ const SignInForm = () => {
 				throw new Error("Invalid Client ID");
 			}
 
-			// **Step 5. Redirect to webform URL (replace with your logic)**
+			// **Step 5. Redirect to webform URL**
 			// Replace this with the logic to generate or redirect to the specific webform URL based on the organization ID.
 		} catch (error) {
 			setErrorMessage(error.error_description || error.message);
@@ -127,14 +129,16 @@ const SignInForm = () => {
 					{isLoading ? "Signing in..." : "Sign-in"}
 				</Button>
 				<Separator className="mx-1 h-1 bg-gray-100" />
-				<Button
-					className="w-full px-4 py-6 text-white font-bold bg-orange-500 hover:bg-orange-600 rounded justify-center items-center"
-					onClick={() => {
-						/* Placeholder for future functionality */
-					}}
-				>
-					Create an Account
-				</Button>
+				<Link href="/sign-up">
+					<Button
+						className="w-full px-4 py-6 text-white font-bold bg-orange-500 hover:bg-orange-600 rounded justify-center items-center"
+						onClick={() => {
+							/* Placeholder for future functionality */
+						}}
+					>
+						Create an Account
+					</Button>
+				</Link>
 			</div>
 
 			{formSuccess && <p className="text-green-500">Signed in successfully!</p>}
