@@ -1,3 +1,4 @@
+//SignInForm.tsx
 "use client";
 import React, { useState } from "react";
 import { useForm } from "react-hook-form";
@@ -69,7 +70,7 @@ const SignInForm = () => {
 				throw new Error("Invalid Client ID");
 			}
 
-			// **Step 5. Redirect to webform URL (replace with your logic)**
+			// **Step 5. Redirect to webform URL**
 			// Replace this with the logic to generate or redirect to the specific webform URL based on the organization ID.
 		} catch (error) {
 			setErrorMessage(error.error_description || error.message);
