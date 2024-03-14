@@ -11,7 +11,6 @@ generator client {
 model User {
   id             String         @id @default(uuid())
   email          String         @unique
-  password       String
   organizationId Int
   organization   Organization   @relation(fields: [organizationId], references: [id])
   formResponses  FormResponse[]

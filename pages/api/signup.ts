@@ -1,7 +1,7 @@
-// pages/api/signup.ts
 import { NextApiRequest, NextApiResponse } from "next";
 import { supabase } from "../../lib/supabaseClient";
 import { PrismaClient } from "@prisma/client";
+
 const prisma = new PrismaClient();
 
 export default async function handler(
@@ -9,50 +9,50 @@ export default async function handler(
 	res: NextApiResponse,
 ) {
 	if (req.method !== "POST") {
-		res.setHeader("Allow", ["POST"]);
-		return res.status(405).end(`Method ${req.method} Not Allowed`);
+		return res.status(405).json({ error: "Method Not Allowed" });
 	}
 
-	const {
-		email,
-		password,
-		clientID,
-	}: { email: string; password: string; clientID?: string } = req.body;
+	const { email, password, clientID } = req.body;
 
 	try {
-		// Create user in Supabase
-		const { user, error: signUpError } = await supabase.auth.signUp({
+		const {
+			data: { user },
+			error: signUpError,
+		} = await supabase.auth.signUp({
 			email,
 			password,
 		});
-		if (signUpError) throw signUpError;
 
-		// Validate clientID if applicable
-		let parsedClientID: number | null = null;
-		if (clientID) {
-			parsedClientID = parseInt(clientID, 10);
-			if (isNaN(parsedClientID)) {
-				return res.status(400).json({ message: "Invalid clientID" });
-			}
+		if (signUpError || !user) {
+			throw new Error(signUpError?.message || "Supabase signup failed");
 		}
 
-		// Save additional user info in your database using Prisma
-		// This operation is optional and depends on your application's needs
+		// Assume clientID is optional and maps to a valid organizationId if provided
+		let organizationId = null;
+		if (clientID) {
+			const organization = await prisma.organization.findUnique({
+				where: { clientId: clientID },
+			});
+			if (!organization) {
+				return res.status(400).json({ message: "Invalid clientID" });
+			}
+			organizationId = organization.id;
+		}
+
 		await prisma.user.create({
 			data: {
-				id: user.id, // Use Supabase user ID as reference
+				id: user.id,
 				email: user.email,
-				organizationId: parsedClientID,
+				organizationId: organizationId,
+				// Omit the password field or use a placeholder if necessary
 			},
 		});
 
 		return res.status(200).json({ message: "User created successfully" });
-	} catch (error: any) {
-		// "any" type for error since catch clause variable type annotation is not yet supported in TS.
+	} catch (error) {
 		console.error("Signup error:", error);
-		const message = error.message || "An error occurred during signup.";
-
-		// Generic error to avoid exposing sensitive information
-		return res.status(500).json({ message });
+		return res
+			.status(500)
+			.json({ error: error.message || "An error occurred during signup." });
 	}
 }

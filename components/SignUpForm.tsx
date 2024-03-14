@@ -156,7 +156,12 @@ const SignUpForm = () => {
 			<Separator className="mx-1 h-1 bg-gray-100" />
 
 			<div className="flex items-center space-x-2">
-				<Checkbox id="terms" {...register("agreeToTerms")} />
+				<Checkbox
+					id="terms"
+					{...register("agreeToTerms", {
+						setValueAs: (value) => value === "on",
+					})}
+				/>
 				<Label htmlFor="terms">Accept terms and conditions</Label>
 			</div>
 			{errors.agreeToTerms && (
