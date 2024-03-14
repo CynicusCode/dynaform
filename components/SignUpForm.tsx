@@ -15,7 +15,7 @@ import { FloatingLabelWithIcon } from "./ui/FloatingLabelWithIcon";
 import { Button } from "./ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-import router from "next/router";
+import { useRouter } from "next/navigation";
 
 // Adjusted Zod schema to include clientID and agreeToTerms
 const signUpSchema = z
@@ -35,6 +35,7 @@ const signUpSchema = z
 	});
 
 const SignUpForm = () => {
+	const router = useRouter();
 	const {
 		register,
 		handleSubmit,

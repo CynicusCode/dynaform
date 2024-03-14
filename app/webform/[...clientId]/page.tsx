@@ -1,7 +1,7 @@
 import React from "react";
 import Image from "next/legacy/image";
 
-const SignInPage: React.FC = () => {
+const Webform: React.FC = () => {
 	return (
 		<main className="bg-white relative flex justify-center items-center h-screen m-0">
 			<div className="relative max-w-screen-2xl w-full h-full flex justify-center items-center bg-stone-50">
@@ -28,4 +28,4 @@ const SignInPage: React.FC = () => {
 	);
 };
 
-export default SignInPage;
+export default Webform;
