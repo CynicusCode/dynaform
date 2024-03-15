@@ -75,6 +75,40 @@ const SignUpForm = () => {
 
 	return (
 		<form onSubmit={handleSubmit(onSubmit)} className="space-y-8">
+			<RadioGroup {...register("clientType")}>
+				<div className="flex items-center space-x-2">
+					<RadioGroupItem value="existingOnsite" id="existingOnsite" />
+					<Label htmlFor="existingOnsite">I have a client ID for Onsite.</Label>
+				</div>
+				<div className="flex items-center space-x-2">
+					<RadioGroupItem value="existingOPI" id="existingOPI" />
+					<Label htmlFor="existingOPI">I have a client ID for (OPI).</Label>
+				</div>
+				<div className="flex items-center space-x-2">
+					<RadioGroupItem value="new" id="new" />
+					<Label htmlFor="new">I am a completely new customer.</Label>
+				</div>
+			</RadioGroup>
+
+			{(clientType === "existingOnsite" || clientType === "existingOPI") && (
+				<FloatingLabelWithIcon
+					label="Client ID"
+					id="clientID"
+					type="text"
+					icon={
+						<Image
+							src={clientIcon}
+							alt="Client ID icon"
+							width={24}
+							height={24}
+						/>
+					}
+					{...register("clientID")}
+				/>
+			)}
+
+			<Separator className="mx-1 h-1 bg-gray-100" />
+
 			<FloatingLabelWithIcon
 				label="E-mail"
 				id="email"
@@ -119,42 +153,6 @@ const SignUpForm = () => {
 			{errors.confirmPassword && (
 				<p className="text-red-500">{errors.confirmPassword.message}</p>
 			)}
-
-			<Separator className="mx-1 h-1 bg-gray-100" />
-
-			<RadioGroup {...register("clientType")}>
-				<div className="flex items-center space-x-2">
-					<RadioGroupItem value="existingOnsite" id="existingOnsite" />
-					<Label htmlFor="existingOnsite">I have a client ID for Onsite.</Label>
-				</div>
-				<div className="flex items-center space-x-2">
-					<RadioGroupItem value="existingOPI" id="existingOPI" />
-					<Label htmlFor="existingOPI">I have a client ID for (OPI).</Label>
-				</div>
-				<div className="flex items-center space-x-2">
-					<RadioGroupItem value="new" id="new" />
-					<Label htmlFor="new">I am a completely new customer.</Label>
-				</div>
-			</RadioGroup>
-
-			{(clientType === "existingOnsite" || clientType === "existingOPI") && (
-				<FloatingLabelWithIcon
-					label="Client ID"
-					id="clientID"
-					type="text"
-					icon={
-						<Image
-							src={clientIcon}
-							alt="Client ID icon"
-							width={24}
-							height={24}
-						/>
-					}
-					{...register("clientID")}
-				/>
-			)}
-
-			<Separator className="mx-1 h-1 bg-gray-100" />
 
 			<div className="flex items-center space-x-2">
 				<Checkbox

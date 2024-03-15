@@ -9,12 +9,13 @@ export default async function handler(
 	res: NextApiResponse,
 ) {
 	if (req.method !== "POST") {
-		return res.status(405).json({ error: "Method Not Allowed" });
+		return res.status(405).json({ message: "Method Not Allowed" });
 	}
 
-	const { email, password, clientID } = req.body;
+	const { email, password, clientID, clientType } = req.body;
 
 	try {
+		// Supabase user creation
 		const {
 			data: { user },
 			error: signUpError,
@@ -27,32 +28,41 @@ export default async function handler(
 			throw new Error(signUpError?.message || "Supabase signup failed");
 		}
 
-		// Assume clientID is optional and maps to a valid organizationId if provided
-		let organizationId = null;
-		if (clientID) {
-			const organization = await prisma.organization.findUnique({
-				where: { clientId: clientID },
+		if (!clientID || clientType === "new") {
+			return res.status(400).json({
+				message:
+					"New organizations must be pre-registered. Please provide a valid client ID.",
 			});
-			if (!organization) {
-				return res.status(400).json({ message: "Invalid clientID" });
-			}
-			organizationId = organization.id;
 		}
 
+		// Check if the organization with the provided clientID exists
+		const organization = await prisma.organization.findUnique({
+			where: { clientId: clientID },
+		});
+
+		if (!organization) {
+			return res
+				.status(400)
+				.json({ message: "Invalid clientID. Organization not found." });
+		}
+
+		// Prisma user creation with linked organizationId
 		await prisma.user.create({
 			data: {
-				id: user.id,
+				id: user.id, // Assuming Supabase generates a UUID for the user
 				email: user.email,
-				organizationId: organizationId,
-				// Omit the password field or use a placeholder if necessary
+				organizationId: organization.id,
+				// Note: The password is managed by Supabase; ensure it is not stored elsewhere in plaintext
 			},
 		});
 
-		return res.status(200).json({ message: "User created successfully" });
+		return res.status(200).json({
+			message: "User created successfully and linked to organization.",
+		});
 	} catch (error) {
-		console.error("Signup error:", error);
+		console.error("Error during user registration:", error);
 		return res
 			.status(500)
-			.json({ error: error.message || "An error occurred during signup." });
+			.json({ message: error.message || "An error occurred during signup." });
 	}
 }

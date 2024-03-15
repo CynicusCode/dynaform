@@ -11,74 +11,76 @@ generator client {
 model User {
   id             String         @id @default(uuid())
   email          String         @unique
-  organizationId Int
-  organization   Organization   @relation(fields: [organizationId], references: [id])
+  orgConnectorId Int            // Renamed to clarify its purpose as a connector
+  clientId       String         // For application logic to link users based on clientId
+  organization   Organization   @relation(fields: [orgConnectorId], references: [id])
   formResponses  FormResponse[]
 }
 
 model Organization {
-  id            Int              @id @default(autoincrement())
-  clientId      String           @unique
-  name          String
-  type          OrganizationType
-  template      Template?        @relation(fields: [templateId], references: [id])
-  templateId    Int?             @unique // Optional foreign key (might have base or custom type)
-  users         User[]
-  formResponses FormResponse[]
+  id             Int              @id @default(autoincrement())
+  clientId       String           @unique // Used for application logic
+  name           String
+  type           OrganizationType
+  template       Template?        @relation(fields: [templateId], references: [id])
+  templateId     Int?             @unique
+  users          User[]
+  formResponses  FormResponse[]
 }
 
-
 model Template {
-  id             Int           @id @default(autoincrement())
-  baseTemplate   Template?     @relation("BaseTemplateCustomTemplate", fields: [baseTemplateId], references: [id])
-  baseTemplateId Int?
-  childTemplates Template[]    @relation("BaseTemplateCustomTemplate")
-  formFields     FormField[]
-  Organization   Organization?
+  id              Int            @id @default(autoincrement())
+  baseTemplate    Template?      @relation("BaseTemplateCustomTemplate", fields: [baseTemplateId], references: [id])
+  baseTemplateId  Int?
+  childTemplates  Template[]     @relation("BaseTemplateCustomTemplate")
+  formFields      FormField[]
+  Organization    Organization?
 }
 
 model FormField {
-  id         Int               @id @default(autoincrement())
-  fieldName  String
-  label      String
-  fieldType  FieldType
-  options    FormFieldOption[]
-  templateId Int?
-  template   Template?         @relation(fields: [templateId], references: [id])
+  id           Int              @id @default(autoincrement())
+  fieldName    String
+  label        String
+  placeholder  String?
+  fieldType    FieldType
+  options      FormFieldOption[]
+  templateId   Int?
+  template     Template?        @relation(fields: [templateId], references: [id])
 }
 
 model FormFieldOption {
-  id          Int       @id @default(autoincrement())
-  formFieldId Int
-  optionValue String
-  formField   FormField @relation(fields: [formFieldId], references: [id])
+  id           Int       @id @default(autoincrement())
+  formFieldId  Int
+  optionValue  String
+  formField    FormField @relation(fields: [formFieldId], references: [id])
 }
 
 model FormResponse {
   id              Int              @id @default(autoincrement())
-  userId          String           // Change this to String to match User.id
+  userId          String
   user            User             @relation(fields: [userId], references: [id])
-  organizationId  Int
-  organization    Organization     @relation(fields: [organizationId], references: [id])
+  orgConnectorId  Int              // Renamed to match the User model's reference
+  clientId        String           // For application logic, mirroring the structure in User
+  organization    Organization     @relation(fields: [orgConnectorId], references: [id])
   responses       String
   customQuestions CustomQuestion[]
   FormSubmission  FormSubmission?
 }
 
 model CustomQuestion {
-  id             Int          @id @default(autoincrement())
-  formResponseId Int
-  question       String
-  answer         String?
-  formResponse   FormResponse @relation(fields: [formResponseId], references: [id])
+  id              Int          @id @default(autoincrement())
+  formResponseId  Int
+  question        String
+  answer          String?
+  formResponse    FormResponse @relation(fields: [formResponseId], references: [id])
 }
 
 model FormSubmission {
-  id                 Int          @id @default(autoincrement())
-  formResponse       FormResponse @relation(fields: [formResponseId], references: [id], onDelete: Cascade)
-  formResponseId     Int          @unique
-  confirmationNumber String       @unique
-  submittedAt        DateTime     @default(now())
+  id                  Int          @id @default(autoincrement())
+  formResponse        FormResponse @relation(fields: [formResponseId], references: [id], onDelete: Cascade)
+  formResponseId      Int          @unique
+  confirmationNumber  String       @unique
+  submittedAt         DateTime     @default(now())
 }
 
 enum OrganizationType {
