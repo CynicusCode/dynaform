@@ -1,3 +1,5 @@
+// signup.ts
+
 import { NextApiRequest, NextApiResponse } from "next";
 import { supabase } from "../../lib/supabaseClient";
 import { PrismaClient } from "@prisma/client";
@@ -31,7 +33,7 @@ export default async function handler(
 		if (!clientID || clientType === "new") {
 			return res.status(400).json({
 				message:
-					"New organizations must be pre-registered. Please provide a valid client ID.",
+					"New organizations are not supported. Please provide a valid client ID.",
 			});
 		}
 
@@ -46,13 +48,13 @@ export default async function handler(
 				.json({ message: "Invalid clientID. Organization not found." });
 		}
 
-		// Prisma user creation with linked organizationId
+		// Prisma user creation with linked orgConnectorId and clientId
 		await prisma.user.create({
 			data: {
-				id: user.id, // Assuming Supabase generates a UUID for the user
+				id: user.id,
 				email: user.email,
-				organizationId: organization.id,
-				// Note: The password is managed by Supabase; ensure it is not stored elsewhere in plaintext
+				orgConnectorId: organization.id,
+				clientId: clientID,
 			},
 		});
 

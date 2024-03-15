@@ -55,18 +55,23 @@ const SignInForm = () => {
 			reset(); // Reset form on success
 
 			// Retrieve user data after successful sign-in
-			const user = await supabase
+			const { data: user, error: userError } = await supabase
 				.from("User")
-				.select("organizationId")
+				.select("clientId")
+				.eq("email", data.email)
 				.single();
 
-			// Check if user object and organization ID exist
-			if (!user || !user.data.organizationId) {
-				throw new Error("User not found or missing organization ID");
+			if (userError) {
+				throw new Error("Error retrieving user data");
 			}
 
-			// Verify client ID against organization ID
-			if (data.clientId !== user.data.organizationId.toString()) {
+			// Check if user object and organization ID exist
+			if (!user || !user.clientId) {
+				throw new Error("User not found or missing client ID");
+			}
+
+			// Verify client ID against the retrieved client ID
+			if (data.clientId !== user.clientId) {
 				throw new Error("Invalid Client ID");
 			}
 
