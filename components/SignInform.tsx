@@ -44,12 +44,18 @@ const SignInForm = () => {
 
 		try {
 			// Sign in with Supabase
-			const { error } = await supabase.auth.signInWithPassword({
-				email: data.email,
-				password: data.password,
-			});
+			const { data: signInData, error: signInError } =
+				await supabase.auth.signInWithPassword({
+					email: data.email,
+					password: data.password,
+				});
 
-			if (error) throw error;
+			if (signInError) {
+				console.error("Error during sign-in:", signInError);
+				throw signInError;
+			}
+
+			console.log("Sign-in successful:", signInData);
 
 			setFormSuccess(true);
 			reset(); // Reset form on success
@@ -57,27 +63,38 @@ const SignInForm = () => {
 			// Retrieve user data after successful sign-in
 			const { data: user, error: userError } = await supabase
 				.from("User")
-				.select("clientId")
+				.select('"clientId"') // Notice the double quotes around clientId
 				.eq("email", data.email)
 				.single();
 
 			if (userError) {
+				console.error("Error retrieving user data:", userError);
 				throw new Error("Error retrieving user data");
 			}
 
-			// Check if user object and organization ID exist
+			console.log("Retrieved user data:", user);
+
+			// Check if user object and client ID exist
 			if (!user || !user.clientId) {
+				console.error("User data is missing or invalid:", user);
 				throw new Error("User not found or missing client ID");
 			}
 
 			// Verify client ID against the retrieved client ID
 			if (data.clientId !== user.clientId) {
+				console.error(
+					"Invalid client ID:",
+					data.clientId,
+					"Expected:",
+					user.clientId,
+				);
 				throw new Error("Invalid Client ID");
 			}
 
 			// **Step 5. Redirect to webform URL**
-			// Replace this with the logic to generate or redirect to the specific webform URL based on the organization ID.
+			// Replace this with the logic to generate or redirect to the specific webform URL based on the client ID.
 		} catch (error) {
+			console.error("Error during sign-in process:", error);
 			setErrorMessage(error.error_description || error.message);
 		} finally {
 			setIsLoading(false);

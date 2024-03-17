@@ -7,7 +7,7 @@ async function main() {
 		data: {
 			name: "Default Medical Center",
 			type: "MEDICAL",
-			clientId: "123456"
+			clientId: "123456",
 			template: {
 				create: {
 					formFields: {
@@ -15,6 +15,7 @@ async function main() {
 							{
 								fieldName: "serviceType",
 								label: "Service Type",
+								placeholder: "Select a service type",
 								fieldType: "DROPDOWN",
 								options: {
 									create: [
@@ -27,6 +28,7 @@ async function main() {
 							{
 								fieldName: "appointmentDurationHours",
 								label: "Appointment Duration - Hours",
+								placeholder: "8",
 								fieldType: "DROPDOWN",
 								options: {
 									create: Array.from({ length: 13 }, (_, i) => ({
@@ -37,6 +39,7 @@ async function main() {
 							{
 								fieldName: "appointmentDurationMinutes",
 								label: "Appointment Duration - Minutes",
+								placeholder: "30 Minutes",
 								fieldType: "DROPDOWN",
 								options: {
 									create: [
@@ -49,7 +52,8 @@ async function main() {
 							},
 							{
 								fieldName: "appointmentTimeAMPM",
-								label: "AM/PM",
+								label: "Select AM/PM",
+								placeholder: "AM",
 								fieldType: "DROPDOWN",
 								options: {
 									create: [{ optionValue: "AM" }, { optionValue: "PM" }],
@@ -58,6 +62,7 @@ async function main() {
 							{
 								fieldName: "language",
 								label: "Language",
+								placeholder: "American Sign Language",
 								fieldType: "SEARCHABLE_LIST",
 								options: {
 									create: [
@@ -89,6 +94,7 @@ async function main() {
 							{
 								fieldName: "appointmentDateTime",
 								label: "Appointment Date & Time",
+								placeholder: "10/28/24",
 								fieldType: "DATE",
 								options: {
 									create: [],
@@ -97,6 +103,8 @@ async function main() {
 							{
 								fieldName: "appointmentLocation",
 								label: "Address of the Appointment",
+								placeholder:
+									"Federal Medical Facility, 1234 Apple Street, New York, NY 10010",
 								fieldType: "TEXT",
 								options: {
 									create: [],
@@ -105,6 +113,7 @@ async function main() {
 							{
 								fieldName: "arrivalInstructions",
 								label: "Arrival Instructions",
+								placeholder: "2nd Floor, Front Desk",
 								fieldType: "TEXT_AREA",
 								options: {
 									create: [],
@@ -112,7 +121,8 @@ async function main() {
 							},
 							{
 								fieldName: "consumerName",
-								label: "Customer's Name",
+								label: "Patient's Name;",
+								placeholder: "Joe Doe",
 								fieldType: "TEXT",
 								options: {
 									create: [],
@@ -121,6 +131,7 @@ async function main() {
 							{
 								fieldName: "appointmentType",
 								label: "Appointment Type",
+								placeholder: "Medical",
 								fieldType: "DROPDOWN",
 								options: {
 									create: [
@@ -142,6 +153,7 @@ async function main() {
 							{
 								fieldName: "appointmentDescription",
 								label: "Description of the Appointment",
+								placeholder: "Blood work follow up with Dr. McGiver",
 								fieldType: "TEXT_AREA",
 								options: {
 									create: [],
@@ -150,6 +162,7 @@ async function main() {
 							{
 								fieldName: "interpreterGender",
 								label: "Interpreter Gender",
+								placeholder: "Select interpreter gender",
 								fieldType: "DROPDOWN",
 								options: {
 									create: [
@@ -162,6 +175,7 @@ async function main() {
 							{
 								fieldName: "preferredInterpreter",
 								label: "Preferred Interpreter",
+								placeholder: "Preferred Interpreter",
 								fieldType: "CHECKBOX",
 								options: {
 									create: [],
@@ -170,6 +184,7 @@ async function main() {
 							{
 								fieldName: "amountOfInterpreters",
 								label: "Amount of Interpreters",
+								placeholder: "1",
 								fieldType: "NUMBER",
 								options: {
 									create: [],
