@@ -61,24 +61,28 @@ const SignInForm = () => {
 			reset(); // Reset form on success
 
 			// Retrieve user data after successful sign-in
-			const { data: user, error: userError } = await supabase
+			const { data: users, error: userError } = await supabase
 				.from("User")
-				.select('"clientId"') // Notice the double quotes around clientId
-				.eq("email", data.email)
-				.single();
+				.select('"clientId"')
+				.eq("email", data.email);
 
 			if (userError) {
 				console.error("Error retrieving user data:", userError);
 				throw new Error("Error retrieving user data");
 			}
 
-			console.log("Retrieved user data:", user);
+			console.log("Retrieved user data:", users);
 
-			// Check if user object and client ID exist
-			if (!user || !user.clientId) {
-				console.error("User data is missing or invalid:", user);
-				throw new Error("User not found or missing client ID");
+			// Check if any user records were returned
+			if (users.length === 0) {
+				console.error("User not found with email:", data.email);
+				throw new Error("User not found");
+			} else if (users.length > 1) {
+				console.error("Multiple user records found with email:", data.email);
+				throw new Error("Multiple user records found");
 			}
+
+			const user = users[0];
 
 			// Verify client ID against the retrieved client ID
 			if (data.clientId !== user.clientId) {
