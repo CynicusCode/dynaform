@@ -1,7 +1,7 @@
 //### FloatingLabelWithIcon.tsx
 "use client";
 import * as React from "react";
-import { Input, InputProps } from "./Input"; // Adjust the import path as needed
+import { Input, InputProps } from "./Input";
 
 export interface FloatingLabelWithIconProps extends InputProps {
 	label: string;
