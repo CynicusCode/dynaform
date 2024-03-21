@@ -1,6 +1,6 @@
 //SignInPage.tsx
 import React from "react";
-import Image from "next/legacy/image";
+import Image from "next/image";
 import SignInForm from "@/components/SignInform";
 import SignInNotice from "@/components/SignInNotice";
 
