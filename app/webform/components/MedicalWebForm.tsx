@@ -1,32 +1,21 @@
-//MedicalWebForm.tsx
-"use client";
-import { z } from "zod";
+// MedicalWebform.tsx
 import React from "react";
-import { useForm } from "react-hook-form";
+import { useForm, FormProvider } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import {
-	Select,
-	SelectContent,
-	SelectGroup,
-	SelectItem,
-	SelectLabel,
-	SelectTrigger,
-	SelectValue,
-} from "@/components/ui/select";
-import { Label } from "@/components/ui/label";
+import { Form } from "@/components/ui/form";
+import ApptDateTime from "./ApptDateTime";
+import { z } from "zod";
+import ServiceTypeQuestion from "../webform/components/questions/ServiceTypeQuestion";
 
 const formSchema = z.object({
 	serviceType: z.string().nonempty("Service Type is required"),
+	appointmentDateTime: z.date().optional(),
 });
 
 type FormData = z.infer<typeof formSchema>;
 
 function MedicalWebform() {
-	const {
-		register,
-		handleSubmit,
-		formState: { errors },
-	} = useForm<FormData>({
+	const methods = useForm<FormData>({
 		resolver: zodResolver(formSchema),
 	});
 
@@ -36,34 +25,12 @@ function MedicalWebform() {
 	};
 
 	return (
-		<form onSubmit={handleSubmit(onSubmit)}>
-			<Label htmlFor="Service Type"> Select Service Type </Label>
-			<div className="flex mt-4 relative z-[1]">
-				<Select>
-					<SelectTrigger className="rounded-xl">
-						<SelectValue
-							{...register("serviceType")}
-							placeholder="Service type"
-						/>
-					</SelectTrigger>
-					<SelectContent>
-						<SelectGroup>
-							<SelectLabel>Service Types</SelectLabel>
-							<SelectItem value="Over the phone">Over the phone</SelectItem>
-							<SelectItem value="VRI">Virtual Onsite</SelectItem>
-							<SelectItem value="Onsite">Onsite- face-to-face</SelectItem>
-						</SelectGroup>
-					</SelectContent>
-				</Select>
-			</div>
-			<div className="mt-4">
-				<div>
-					writing something here just to test if it goes behind the content
-				</div>
-				<Label htmlFor="Date">Appointment Date & Time</Label>
-				{errors.serviceType && <p>{errors.serviceType.message}</p>}
-			</div>
-		</form>
+		<FormProvider {...methods}>
+			<Form onSubmit={methods.handleSubmit(onSubmit)}>
+				<ServiceTypeQuestion />
+				<button type="submit">Submit</button>
+			</Form>
+		</FormProvider>
 	);
 }
 
