@@ -13,14 +13,14 @@ const DisplayBoard = () => {
 	);
 };
 
-const defaultMedical = () => {
+const Webform = () => {
 	return (
 		<Layout displayBoard={<DisplayBoard />}>
-			<div className="mr-24 ml-24">
+			<div className=" w-96 ">
 				<MedicalWebform />
 			</div>
 		</Layout>
 	);
 };
 
-export default defaultMedical;
+export default Webform;
