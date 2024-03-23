@@ -1,0 +1,3 @@
+.bannerImage {
+  object-fit: cover; /* This replicates the objectFit="cover" behavior */
+}

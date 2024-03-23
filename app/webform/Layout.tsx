@@ -1,6 +1,7 @@
 // Layout.tsx
 import React from "react";
 import Image from "next/image";
+import styles from "./Layout.module.css"; // Assuming you have a CSS module file for your layout styles
 
 const Layout: React.FC<{
 	displayBoard: React.ReactNode;
@@ -16,8 +17,7 @@ const Layout: React.FC<{
 						alt="Banner"
 						width={200}
 						height={100}
-						layout="responsive"
-						objectFit="cover"
+						className={styles.bannerImage} // Add this class to your Image component
 					/>
 				</div>
 
