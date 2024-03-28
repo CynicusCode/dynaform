@@ -1,79 +1,93 @@
 "use client";
-import { useState, useRef, useEffect } from "react";
+
+import * as React from "react";
+import { CaretSortIcon, CheckIcon } from "@radix-ui/react-icons";
+
+import { cn } from "@/lib/utils";
+import { Button } from "@/components/ui/button";
 import {
-	Input,
-	Select,
-	SelectTrigger,
-	SelectValue,
-	SelectContent,
-	SelectItem,
-} from "@/components/ui/select";
+	Command,
+	CommandEmpty,
+	CommandGroup,
+	CommandInput,
+	CommandItem,
+} from "@/components/ui/command";
+import {
+	Popover,
+	PopoverContent,
+	PopoverTrigger,
+} from "@/components/ui/popover";
 
-export function TimeInput() {
-	const [time, setTime] = useState("");
-	const [amPm, setAmPm] = useState("AM");
-	const inputRef = useRef(null);
+const frameworks = [
+	{
+		value: "next.js",
+		label: "Next.js",
+	},
+	{
+		value: "sveltekit",
+		label: "SvelteKit",
+	},
+	{
+		value: "nuxt.js",
+		label: "Nuxt.js",
+	},
+	{
+		value: "remix",
+		label: "Remix",
+	},
+	{
+		value: "astro",
+		label: "Astro",
+	},
+];
 
-	useEffect(() => {
-		const input = inputRef.current;
-		if (input) {
-			const [hour, minute] = time.split(":");
-			if (hour >= 12 && hour < 18) {
-				setAmPm("PM");
-			} else {
-				setAmPm("AM");
-			}
-			// Adjust the input value to include the placeholder text
-			if (time === "") {
-				input.value = "10:00";
-			} else if (minute === undefined) {
-				input.value = `${hour}:00`;
-			}
-		}
-	}, [time]);
-
-	function handleTimeChange(e) {
-		const input = e.target;
-		let value = input.value;
-		// Remove the placeholder text when the user starts typing
-		if (value.startsWith("10:00")) {
-			value = value.replace("10:00", "");
-		}
-		setTime(value);
-		const [hour, minute] = value.split(":");
-		// Move focus to minute section when two digits are entered for the hour
-		if (hour.length === 2 && (minute === undefined || minute.length === 0)) {
-			input.setSelectionRange(3, 3);
-		}
-	}
-
-	function handleKeyDown(e) {
-		if (e.key === "Tab") {
-			e.preventDefault();
-			inputRef.current.setSelectionRange(3, 3);
-		}
-	}
+export function ComboboxDemo() {
+	const [open, setOpen] = React.useState(false);
+	const [value, setValue] = React.useState("");
 
 	return (
-		<div className="flex items-center space-x-2">
-			<Input
-				ref={inputRef}
-				type="text"
-				className="w-20 time-input"
-				onChange={handleTimeChange}
-				onKeyDown={handleKeyDown}
-			/>
-			<Select value={amPm} onValueChange={setAmPm}>
-				<SelectTrigger className="w-20">
-					<SelectValue placeholder="Select" />
-				</SelectTrigger>
-				<SelectContent>
-					<SelectItem value="AM">AM</SelectItem>
-					<SelectItem value="PM">PM</SelectItem>
-				</SelectContent>
-			</Select>
-		</div>
+		<Popover open={open} onOpenChange={setOpen}>
+			<PopoverTrigger asChild>
+				<Button
+					variant="outline"
+					role="combobox"
+					aria-expanded={open}
+					className="w-[200px] justify-between"
+				>
+					{value
+						? frameworks.find((framework) => framework.value === value)?.label
+						: "Select framework..."}
+					<CaretSortIcon className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+				</Button>
+			</PopoverTrigger>
+			<PopoverContent className="w-[200px] p-0">
+				<Command>
+					<CommandInput placeholder="Search framework..." className="h-9" />
+					<CommandEmpty>No framework found.</CommandEmpty>
+					<CommandGroup>
+						{frameworks.map((framework) => (
+							<CommandItem
+								key={framework.value}
+								value={framework.value}
+								onSelect={(currentValue) => {
+									setValue(currentValue === value ? "" : currentValue);
+									setOpen(false);
+								}}
+							>
+								{framework.label}
+								<CheckIcon
+									className={cn(
+										"ml-auto h-4 w-4",
+										value === framework.value ? "opacity-100" : "opacity-0",
+									)}
+								/>
+							</CommandItem>
+						))}
+					</CommandGroup>
+				</Command>
+			</PopoverContent>
+		</Popover>
 	);
 }
 
-export default TimeInput;
+export default ComboboxDemo;
