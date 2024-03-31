@@ -12,6 +12,11 @@ import DatePicker from "./questions/DatePicker";
 import TimeInput from "./questions/TimeInput";
 import ConsumerName from "./questions/ConsumerName";
 import QuestionDuration from "./questions/QuestionDuration";
+import ArrivalInstructions from "./questions/ArrivalInstructions";
+import AppointmentType from "./questions/AppointmentType";
+import AppointmentDescription from "./questions/AppointmentDescription";
+import InterpreterGender from "./questions/InterpreterGender";
+import PreferredInterpreter from "./questions/PreferredInterpreter";
 
 const formSchema = z.object({
 	serviceType: z.string().min(1, "Service Type is required."),
@@ -27,6 +32,12 @@ const formSchema = z.object({
 		minutes: z.string().min(1, "Please select the minutes."),
 	}),
 	patientName: z.string().min(1, "Patient's Name is required."),
+	arrivalInstructions: z.string().optional(),
+	appointmentType: z.string().min(1, "Appointment Type is required."),
+	appointmentDescription: z.string().min(1, "Appointment Type is required."),
+	interpreterGender: z.string().optional(),
+	hasPreferredInterpreter: z.boolean(),
+	preferredInterpreterName: z.string().optional(),
 });
 
 type FormData = z.infer<typeof formSchema>;
@@ -64,6 +75,21 @@ function MedicalWebform() {
 					label="Patient's Name"
 					placeholder="Maria Garcia"
 				/>
+				<ArrivalInstructions
+					form={form}
+					name="arrivalInstructions"
+					label="Arrival Instructions"
+					placeholder="2nd Floor, Front Desk"
+				/>
+				<AppointmentType control={form.control} />
+				<AppointmentDescription
+					form={form}
+					name="appointmentDescription"
+					label="Description of the Appointment"
+					placeholder="Blood work follow up with Dr. McGiver"
+				/>
+				<InterpreterGender control={form.control} />
+				<PreferredInterpreter />
 				<Button type="submit">Submit</Button>
 			</form>
 		</Form>

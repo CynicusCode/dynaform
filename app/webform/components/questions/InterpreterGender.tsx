@@ -1,4 +1,4 @@
-//QuestionServiceType.tsx
+// InterpreterGender.tsx
 "use client";
 import React from "react";
 import {
@@ -13,26 +13,26 @@ import {
 import { Controller, useFormContext } from "react-hook-form";
 import { FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 
-const QuestionServiceType = () => {
+const InterpreterGender = () => {
 	const { control } = useFormContext();
 
 	return (
 		<Controller
 			control={control}
-			name="serviceType"
+			name="interpreterGender"
 			render={({ field }) => (
 				<FormItem>
-					<FormLabel>Select the Type of Service</FormLabel>
+					<FormLabel>Interpreter Gender</FormLabel>
 					<Select {...field}>
 						<SelectTrigger>
-							<SelectValue placeholder="Service type" />
+							<SelectValue placeholder="Select interpreter gender" />
 						</SelectTrigger>
 						<SelectContent>
 							<SelectGroup>
-								<SelectLabel>Service Types</SelectLabel>
-								<SelectItem value="Over the phone">Over the phone</SelectItem>
-								<SelectItem value="VRI">Virtual Onsite</SelectItem>
-								<SelectItem value="Onsite">Onsite- face-to-face</SelectItem>
+								<SelectLabel>Genders</SelectLabel>
+								<SelectItem value="Male">Male</SelectItem>
+								<SelectItem value="Female">Female</SelectItem>
+								<SelectItem value="No Preference">No Preference</SelectItem>
 							</SelectGroup>
 						</SelectContent>
 					</Select>
@@ -43,4 +43,4 @@ const QuestionServiceType = () => {
 	);
 };
 
-export default QuestionServiceType;
+export default InterpreterGender;
