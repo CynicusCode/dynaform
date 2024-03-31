@@ -10,6 +10,7 @@ import { Button } from "@/components/ui/button";
 import { SelectLanguage } from "./questions/SelectLanguage";
 import DatePicker from "./questions/DatePicker";
 import TimeInput from "./questions/TimeInput";
+import ConsumerName from "./questions/ConsumerName";
 import QuestionDuration from "./questions/QuestionDuration";
 
 const formSchema = z.object({
@@ -25,6 +26,7 @@ const formSchema = z.object({
 		hours: z.string().min(1, "Please select the hours."),
 		minutes: z.string().min(1, "Please select the minutes."),
 	}),
+	patientName: z.string().min(1, "Patient's Name is required."),
 });
 
 type FormData = z.infer<typeof formSchema>;
@@ -56,6 +58,12 @@ function MedicalWebform() {
 				<DatePicker control={form.control} name="appointmentDate.date" />
 				<TimeInput control={form.control} name="appointmentDate.time" />
 				<QuestionDuration control={form.control} />
+				<ConsumerName
+					form={form}
+					name="patientName"
+					label="Patient's Name"
+					placeholder="Maria Garcia"
+				/>
 				<Button type="submit">Submit</Button>
 			</form>
 		</Form>

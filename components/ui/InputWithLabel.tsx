@@ -1,9 +1,7 @@
 // InputWithLabel.tsx
 import * as React from "react";
-import { Input, InputProps } from "./Input"; // Adjust the import path to where your Input component is located
-// InputWithLabel.tsx
+import { Input, InputProps } from "./Input";
 import "./InputWithLabel.css";
-// ...
 
 export interface InputWithLabelProps extends InputProps {
 	label: string;
