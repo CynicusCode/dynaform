@@ -1,28 +1,18 @@
-//Address.tsx
+//testpage.tsx
+
 import React from "react";
-import { InputWithLabel } from "@/components/ui/InputWithLabel";
-import { UseFormReturn } from "react-hook-form";
+import AddressInput from "../webform/components/questions/addresss/AddressInput";
 
-interface AddressProps {
-	form: UseFormReturn<any>;
-	name: string;
-	label: string;
-	placeholder: string;
-}
+const TestAddressInput = () => {
+	return (
+		<div className="justify-center m-40">
+			<AddressInput
+				name="address"
+				label="Enter Address"
+				placeholder="Start typing..."
+			/>
+		</div>
+	);
+};
 
-const Address: React.FC<AddressProps> = ({
-	form,
-	name,
-	label,
-	placeholder,
-}) => (
-	<InputWithLabel
-		label={label}
-		id={name}
-		placeholder={placeholder}
-		value={form.getValues(name)}
-		{...form.register(name)}
-	/>
-);
-
-export default Address;
+export default TestAddressInput;
